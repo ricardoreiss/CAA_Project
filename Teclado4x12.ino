@@ -1,4 +1,4 @@
-// Keypad 4x4 Inputting data
+// Keypad 4x12 Inputting data
 
 #include <Keypad.h>
 

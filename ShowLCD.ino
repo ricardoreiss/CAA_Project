@@ -1,3 +1,4 @@
+
 // Keypad 4x4 Inputting data
 #include <LiquidCrystal.h>
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
@@ -33,7 +34,7 @@ int key = 0;
 
 String fraseid = "";
 
-
+int theLast = 0;
 
 void setup()
 {
@@ -54,17 +55,31 @@ void loop()
         key = id;};
     };
 
+    switch (key) {
+    case 23: //Nível de Intensidade
+       
+        break;
 
-    fraseid +=String(key) + " ";
+    case 35: //Reproduzir
+       
+        break;
+
+    case 47: //Delete
+        Serial.println(fraseid);
+        theLast = fraseid.lastIndexOf('>'); 
+        Serial.println(fraseid.lastIndexOf('>'), );
+        break;
+        
+    default:
+        fraseid +=String(key) + ">";    
+    }
+
     String fid = fraseid;
-
-    Serial.println(fraseid);
-    Serial.println(fraseid.length());
-
+    
     String strs[20];
     int StringCount = 0;
     while (fid.length() > 0){
-      int index = fid.indexOf(' ');
+      int index = fid.indexOf('>');
       if (index == -1){
         strs[StringCount++] = fid;
         break;
@@ -79,9 +94,6 @@ void loop()
     for (int o = 0; o < StringCount; o++){
       String idw = strs[o];
       String word = words[idw.toInt()];
-      Serial.println("o" + String(o));
-      Serial.println(fraseid.length());
-      Serial.println(word);
       frase += word + " ";
     };
 
@@ -90,6 +102,8 @@ void loop()
     lcd.setCursor(0, 0);
     lcd.print(frase);
 
+    
 
-  }
+
+ }
 }

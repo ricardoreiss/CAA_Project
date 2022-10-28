@@ -1,6 +1,8 @@
 
 // Keypad 4x4 Inputting data
 #include <LiquidCrystal.h>
+#include "SoftwareSerial.h"
+#include "DFRobotDFPlayerMini.h"
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 #include <Keypad.h>
@@ -33,13 +35,23 @@ String words[48] = {"Ola", "Meu", "Aqui", "Familia", "Estou", "Gosto", "Tenho", 
 int key = 0;
 
 String fraseid = "";
-
 int theLast = 0;
+
+int intensidade = 1;
+
+#define pinTx 9
+#define pinRx 8
+#define volume 30
+
+SoftwareSerial playerMP3Serial(pinRx, pinTx);
+DFRobotDFPlayerMini playerMP3;
 
 void setup()
 {
 lcd.begin(16, 2);
 Serial.begin(9600);
+playerMP3Serial.begin(9600);
+playerMP3.volume(volume);
 }
 
 //If key is pressed, this key is stored in 'keypressed' variable
@@ -57,18 +69,22 @@ void loop()
 
     switch (key) {
     case 23: //Nível de Intensidade
-       
-        break;
+      if (intensidade == 3){
+        intensidade = 0;
+      };
+      
+      intensidade++;
+      break;
 
     case 35: //Reproduzir
-       
-        break;
+      playerMP3.playFolder(1,1); 
+      break;
 
     case 47: //Delete
-        Serial.println(fraseid);
-        theLast = fraseid.lastIndexOf('>'); 
-        Serial.println(fraseid.lastIndexOf('>'), );
-        break;
+      theLast = fraseid.lastIndexOf('>'); 
+      fraseid = fraseid.substring(0, theLast);
+      fraseid = fraseid.substring(0, fraseid.lastIndexOf('>')+1);
+      break;
         
     default:
         fraseid +=String(key) + ">";    
@@ -98,9 +114,12 @@ void loop()
     };
 
 
+    Serial.println(intensidade);
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print(frase);
+    lcd.print(frase.substring(0, 16));
+    lcd.setCursor(0, 1);
+    lcd.print(frase.substring(16));
 
     
 

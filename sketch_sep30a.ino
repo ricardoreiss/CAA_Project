@@ -22,10 +22,10 @@ byte colPins[numCols]= {44, 42, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22}; //Colum
 Keypad myKeypad= Keypad(makeKeymap(keymap), rowPins, colPins, numRows, numCols);
 
 char ids[48]= {'1', '2', '3', 'A', 'q', 'w', 'e', 'r', 'Q', 'W', 'E', 'R', '4', '5', '6', 'B', 's', 'd', 'f', 'g', 'S', 'Y', 'F', 'G', '7', '8', '9', 'C', 'z', 'x', 'c', 'v', 'Z', 'X', 'P', 'V', '*', '0', '#', 'D', 'j', 'k', 'l', 'o', 'J', 'K', 'L', 'O'};
-String words[48] = {"Ola", "Meu", "Aqui", "Familia", "Estou", "Gosto", "Tenho", "Dormir", "Casa", "Dificuldade", "Banheiro", "Triste",
-"Voce", "Com", "Feliz", "Sonho", "Sentindo", "Comer", "Sou", "Tirar", "Escola", "Socorro", "Hospital", "Nivel de Intensidade", 
+String words[48] = {"Ola", "Meu", "Aqui", "Familia", "Estou", "Gosto", "Ter", "Dormir", "Casa", "Difícil", "Banheiro", "Triste",
+"Voce", "Com", "Feliz", "Obrigado", "Sentindo", "Comer", "Sou", "Tirar", "Escola", "Socorro", "Hospital", "Nivel de Intensidade", 
 "Eu", "De", "Bem", "Amigos", "Preciso", "Comida", "Quero", "Fala", "Nao", "Medo", "Policia", "Reproduzir", 
-"Me", "Isso", "Autista", "Identificar", "Onde", "Tem", "Ir", "Esta", "Fome", "Dor", "Mal", "Delete"};
+"Me", "Isso", "Autista", "Identificar", "Onde", "Quem", "Quando", "Ir", "Fome", "Dor", "Mal", "Delete"};
 
 int key = 0;
 String fraseid = "";
@@ -34,6 +34,17 @@ int intensidade = 1;
 
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
+
+String strs[20];
+int StringCount = 0;
+int rd;
+
+void song(){
+  myDFPlayer.playFolder(1, 1);
+  delay(1000);
+  myDFPlayer.stop();
+  myDFPlayer.playFolder(1,2);
+}
 
 void setup()
 {
@@ -65,10 +76,11 @@ if (keypressed != NO_KEY)
         if (ids[id] == keypressed){
           key = id;};
   };
+  
 
   switch (key) {
   case 23: //Nível de Intensidade
-    if (intensidade == 3){
+    if (intensidade == 10){
       intensidade = 0;
     };
     
@@ -76,9 +88,9 @@ if (keypressed != NO_KEY)
     break;
 
   case 35: //Reproduzir
-    myDFPlayer.play(intensidade);
     Serial.println("Reproduzir...");
     break;
+
 
   case 47: //Delete
     theLast = fraseid.lastIndexOf('>'); 
@@ -87,6 +99,8 @@ if (keypressed != NO_KEY)
     break;
       
   default:
+      Serial.println("Key:" + String(key));
+      myDFPlayer.playFolder(1, key + 1);
       fraseid +=String(key) + ">";    
   }
 
@@ -94,6 +108,7 @@ if (keypressed != NO_KEY)
   
   String strs[20];
   int StringCount = 0;
+  
   while (fid.length() > 0){
     int index = fid.indexOf('>');
     if (index == -1){
@@ -112,7 +127,6 @@ if (keypressed != NO_KEY)
     String word = words[idw.toInt()];
     frase += word + " ";
   };
-
 
   Serial.println(intensidade);
   lcd.clear();

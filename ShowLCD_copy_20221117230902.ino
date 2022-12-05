@@ -64,7 +64,6 @@ void setup()
 
 void loop()
 {
-  analogWrite(7, 500);
   int valor = map(analogRead(A14), 0, 1023, 0, 30);
   myDFPlayer.volume(30);  //Set volume value. From 0 to 30
 char keypressed = myKeypad.getKey();
@@ -87,6 +86,29 @@ if (keypressed != NO_KEY)
 
   case 35: //Reproduzir
     Serial.println("Reproduzir...");
+    String fid = fraseid;
+  
+    String strs[20];
+    int StringCount = 0;
+
+    while (fid.length() > 0){
+      int index = fid.indexOf('>');
+      if (index == -1){
+        strs[StringCount++] = fid;
+        break;
+      }else{
+        strs[StringCount++] = fid.substring(0, index);
+        fid = fid.substring(index+1);
+      }
+    }
+
+    String frase = "";
+
+    for (int o = 0; o < StringCount; o++){
+      String idw = strs[o];
+      myDFPlayer.playFolder(1, idw.toInt());
+      delay(1000);
+    };
     break;
 
 
@@ -133,5 +155,23 @@ if (keypressed != NO_KEY)
   lcd.print(frase.substring(0, 16));
   lcd.setCursor(0, 1);
   lcd.print(frase.substring(16));
+  
+  switch(intensidade){
+      case 1: //GREEN
+        analogWrite(RED, 255 );
+        analogWrite(BLU, 255 );
+        analogWrite(GRE, 0 );
+        break;
+      case 2: //YELLOW
+        analogWrite(RED, 0 );
+        analogWrite(BLU, 255 );
+        analogWrite(GRE, 0 );
+        break;
+      case 3: //RED
+        analogWrite(RED, 0 );
+        analogWrite(BLU, 255 );
+        analogWrite(GRE, 255 );
+        break;
+  };
 }
 }

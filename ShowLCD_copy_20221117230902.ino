@@ -65,7 +65,7 @@ void setup()
 void loop()
 {
   int valor = map(analogRead(A14), 0, 1023, 0, 30);
-  myDFPlayer.volume(30);  //Set volume value. From 0 to 30
+  myDFPlayer.volume(valor);  //Set volume value. From 0 to 30
 char keypressed = myKeypad.getKey();
 if (keypressed != NO_KEY)
 {
